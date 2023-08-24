@@ -1,19 +1,29 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, reverse, redirect
+
+from .models import Advertisement
+from .forms import AdvertisementForm
+
 
 def index(request):
-#     return HttpResponse("""
-#         <h1>Все супер</h1>
-#         <a class="navbar-brand" href="lesson_4/">
-#             Домашняя работа 4 занятия
-#         </a>
-#     """)
-#
-# def lesson(request):
-#     return HttpResponse("""
-#         <h1> Вот и домашка </h1>
-#     """)
-    return render(request, 'index.html')
+    advertisements = Advertisement.objects.all()
+    context = {'advertisements': advertisements}
+    return render(request, "app_advertisement/index.html", context=context)
+
 
 def top_sellers(request):
-    return render(request, "top-sellers.html")
+    return render(request, "app_advertisement/top-sellers.html")
+
+
+def advertisement_post(request):
+    if request.method == "POST":
+        form = AdvertisementForm(request.POST, request.FILES)
+        if form.is_valid():
+            advertisement = form.save(commit=False)
+            advertisement.user = request.user
+            advertisement.save()
+            url = reverse('main-page')
+            return redirect(url)
+    else:
+        form = AdvertisementForm()
+    context = {'form': form}
+    return render(request, "app_advertisement/advertisement-post.html", context=context)
