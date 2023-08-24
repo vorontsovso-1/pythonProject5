@@ -34,7 +34,7 @@ class Advertisement(models.Model):
     )
     updated_at = models.DateTimeField(
         auto_now=True,
-        verbose_name="Дата редоктирования"
+        verbose_name="Дата редактирования"
     )
     user = models.ForeignKey(
         to=User,
