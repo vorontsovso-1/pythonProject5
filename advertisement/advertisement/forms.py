@@ -3,10 +3,10 @@ from .models import Advertisement
 from django.core.exceptions import ValidationError
 
 
-class AdvertisementForm(forms.ModelForm):
+class AdvertisementForm(models.ModelForm):
     class Meta:
         model = Advertisement
-        fields = ['title', 'description', 'price', 'auction', 'user', 'image']
+        fields = ["title", "description", "price", "auction", "image"]
         widgets = {
             'title': forms.TextInput(attrs={"class": "form-control form-control-lg"}),
             'description': forms.Textarea(attrs={"class": "form-control form-control-lg"}),
@@ -16,7 +16,7 @@ class AdvertisementForm(forms.ModelForm):
         }
 
     def clean_title(self):
-        title = self.cleaned_data['title']
-        if '?' in title:
-            raise ValidationError('Заголовок не может начинаться с вопросительного знака ')
+        title = self.cleaned_data["title"]
+        if title.startswith("?"):
+            raise ValidationError("Заголовк не может начинаться с ?")
         return title
